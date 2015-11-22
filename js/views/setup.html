@@ -1,0 +1,24 @@
+<div class="setup-content">
+
+  <div class="setup-description">
+    <p>
+      Takip etmek istediginiz hashtagleri buradan ekleyebilirsiniz. Takip ettiginiz kullanicilar bu hashtagleri iceren yeni bir durum paylastiginda bildirim alacaksiniz.
+    </p>
+  </div>
+  <div class="dropdown suggest-dropdown" ng-class="{'open': suggests.length}">
+    <input class="form-control input-sm col-md-5" name="name" ng-change="getSuggest(keyword)"
+    ng-model="keyword" type="text" value="" placeholder="#hastag">
+    <ul aria-labelledby="dropdownMenu1" class="dropdown-menu">
+      <li ng-repeat="suggest in suggests">
+        <a href="#" ng-click="selectHash(suggest)">#{{suggest}}</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="selected-hashes" ng-if="selectedHashes.length > 0">
+    <div class="item no-select" data-value="{{hash}}" ng-repeat="hash in selectedHashes track by $index">{{hash}}
+      <a class="remove" href="" ng-click="deselectHash(hash)" tabindex="-1" title="Remove">×</a>
+    </div>
+  </div>
+</div>
+<button class="btn btnsm btn-block btn-success setup-complete" name="button" ng-click="complete()" type="button"><i class="fa fa-bookmark"></i> Kaydet</button>

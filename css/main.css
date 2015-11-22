@@ -1,0 +1,223 @@
+body {
+  width: 400px;
+  min-height: 200px;
+}
+li.bildirim {
+  font-size: 13px;
+  padding: 5px 0px 5px 6px;
+  display: block;
+  min-height: 65px;
+  white-space: normal;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  position: relative;
+  padding-top: 12px;
+}
+ul.notification-list {
+  padding: 3px 3px;
+  padding-top: 8px;
+  list-style: none;
+  margin: 0;
+}
+ul.notification-list img {
+  border-radius: 50%;
+  border: 1px solid #f4f4f4;
+  margin-right: 8px;
+}
+ul.notification-list .timeago {
+  color: #8C8585;
+  font-size: 10px!important;
+  margin-right: 7px;
+  float: right;
+}
+li.bildirim:last-child {
+  border: none;
+}
+.loginForm {
+  padding: 0 10%;
+  /* margin-top: 50px; */
+  padding-top: 40px;
+  height: 100%;
+}
+.loginForm button {
+  margin-top: 12px;
+}
+.logo a:focus {
+  border: none;
+  border-color: transparent;
+  color: transparent;
+}
+.logo * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.logo img {
+  border: none;
+  border-color: transparent;
+  color: transparent;
+}
+.logo a:visited {
+  border: none;
+  border-color: transparent;
+  color: transparent;
+}
+.logo {
+  display: block;
+  margin: 6% 24% 14% 24%;
+}
+.description {
+  text-align: center;
+  margin: 14% 0 30px 0;
+}
+.status {
+  text-align: center;
+}
+.statusL {
+  text-align: center;
+  padding-top: 5px;
+}
+.fast-control {
+  right: 10px;
+  top: 7px;
+  position: absolute;
+}
+.fast-control i {
+  cursor: pointer;
+}
+.fast-control i:hover {
+  font-size: 1.1em;
+}
+.fast-control i.deactive {
+  color: #ccc;
+}
+.bildirim_tumu a {
+  color: #fff;
+  background-color: #AB1500;
+  border-radius: 0px;
+}
+.bildirim_tumu a:hover {
+  color: #fff;
+  border-radius: 0px;
+  background-color: #A13020;
+}
+.bildirim_actions {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+}
+.bildirim_actions a {
+  display: none;
+}
+.inline {
+  display: inline;
+}
+.suggest-dropdown input {
+  /*width: 50%;*/
+}
+
+/*SETUP*/
+
+.selected-hashes {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  width: 100%;
+  padding: 8px 0px;
+  overflow: hidden;
+}
+.selected-hashes .item[data-value] {
+  position: relative;
+  padding-right: 24px !important;
+  text-shadow: 0 1px 0 rgba(0, 51, 83, 0.3);
+  background-color: #2196F3;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  font-weight: normal;
+  display: inline-block;
+  vertical-align: baseline;
+  zoom: 1;
+}
+.selected-hashes > div.item {
+  padding: 2px 6px;
+  margin: 0 3px 3px 0;
+  color: #ffffff;
+  cursor: pointer;
+  background: #1da7ee;
+  border: 1px solid #0073bb;
+}
+.item[data-value] .remove {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  bottom: 0;
+  display: inline-block;
+  width: 17px;
+  padding: 2px 0 0 0;
+  font-size: 12px;
+  font-weight: normal;
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  border-left: 1px solid #0073bb;
+  -webkit-border-radius: 0 2px 2px 0;
+  -moz-border-radius: 0 2px 2px 0;
+  border-radius: 0 2px 2px 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.setup-complete {
+  position: fixed;
+  bottom: 0;
+}
+.setup-content {
+  min-height: 300px;
+  padding: 20px 10px 30px 10px;
+}
+.setup-description {
+  border-radius: 5px;
+  border: 1px solid #E4DCDC;
+  background: #f1f1f1;
+  margin-bottom: 5px;
+  text-align: center;
+  padding: 10px 15px 5px 15px;
+  margin-bottom: 10px;
+}
+.no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.t-light {
+  font-weight: lighter;
+}
+.loading-indicator {
+  text-align: center;
+  margin: 20% 50%;
+}
+img.avatar.new-post-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #c4c4c4;
+}
+.post-notification-list {
+    padding: 10px 15px;
+    border-bottom: 1px solid #d3d3d3;
+}
+div.bildirim {
+    display: inline;
+    margin-left: 5px;
+}
+.last-posts-title {
+  font-size: 11px;
+}

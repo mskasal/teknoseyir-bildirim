@@ -1,0 +1,19 @@
+<div class="loading" ng-hide="!loadingState">
+  <i class="fa fa-gear fa-spin fa-2x loading-indicator"></i>
+</div>
+<div class="error" ng-show="failed">
+  <div class="alert alert-danger">
+    <p>
+      Giris yapilamadi. Kullanici ismini kontrol edin.
+    </p>
+    <button class="btn btn-small btn-block btn-warning" name="button" ng-click="gotToLogin()" type="button">
+      <i class='fa fa-refresh'></i>
+      Yeniden dene.</button>
+  </div>
+</div>
+<div class="post-notification-list" ng-show="postContentObjects.length">
+  <div class="read bildirim" ng-repeat="post in postContentObjects" id="bildirim-{{post.id}}" ng-bind-html="post.user">
+  </div>
+  <a href="http://teknoseyir.com/" target="_blank"><span class="last-posts-title text-mute">Ilgili bir post paylasti!</span></a>
+</div>
+<ul class="notification-list" ng-bind-html="contentHTML" ng-show="!loadingState"></ul>
