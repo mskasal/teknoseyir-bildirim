@@ -1,1 +1,66 @@
-{}
+{
+  "l10nTabName": {
+    "message":"Localization"
+    ,"description":""
+  }
+  ,"l10nHeader": {
+    "message":"It does localization too! (this whole tab is, actually)"
+    ,"description":""
+  }
+  ,"l10nIntro": {
+    "message":"'L10n' refers to 'Localization' - 'L' an 'n' are obvious,"
+    ,"description":""
+  }
+  ,"l10nProd": {
+    "message":"You <strong>are</strong> planning to allow localization, right?  You have <em>no idea</em> who will be using your extension! "
+    ,"description":""
+  }
+  ,"l10nFirstParagraph": {
+    "message":"When the options page loads, elements decorated with <strong>data-l10n</strong> will automatically be localized!"
+    ,"description":""
+  }
+  ,"l10nSecondParagraph": {
+    "message":"If you need more complex localization, you can also define <strong>data-l10n-args</strong>. "
+    ,"description":""
+    ,"placeholders": {
+      "containerType": {
+        "content":"$1"
+        ,"example":"'array', 'list', or something similar"
+        ,"description":""
+      }
+      ,"dataType": {
+        "content":"$2"
+        ,"example":"string"
+        ,"description":""
+      }
+      ,"functionArgs": {
+        "content":"$3"
+        ,"example":"arguments"
+        ,"description":""
+      }
+    }
+  }
+  ,"l10nThirdParagraph": {
+    "message":"Message contents are passed right into innerHTML without processing - "
+    ,"description":""
+  }
+  ,"l10nButtonsBefore": {
+    "message":"Different types of buttons are handled as well.  &lt;button&gt; elements have their html set:"
+  }
+  ,"l10nButton": {
+    "message":"in a <strong>button</strong>"
+  }
+  ,"l10nButtonsBetween": {
+    "message":"while &lt;input type='submit'&gt; and &lt;input type='button'&gt; get their 'value' set (note: no HTML):"
+  }
+  ,"l10nSubmit": {
+    "message":"a <strong>submit</strong> value"
+  }
+  ,"l10nButtonsAfter": {
+    "message":"Awesome, no?"
+  }
+  ,"l10nExtras": {
+    "message":"You can even set <span class='code'>data-l10n</span> on things like th"
+    ,"description":""
+  }
+}
