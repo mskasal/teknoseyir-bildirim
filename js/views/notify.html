@@ -14,6 +14,6 @@
 <div class="post-notification-list" ng-show="postContentObjects.length">
   <div class="read bildirim" ng-repeat="post in postContentObjects" id="bildirim-{{post.id}}" ng-bind-html="post.user">
   </div>
-  <a href="http://teknoseyir.com/" target="_blank"><span class="last-posts-title text-mute">Ilgili bir post paylasti!</span></a>
+  <span class="last-posts-title text-mute">Ilgili bir post paylasti!</span>
 </div>
 <ul class="notification-list" ng-bind-html="contentHTML" ng-show="!loadingState"></ul>

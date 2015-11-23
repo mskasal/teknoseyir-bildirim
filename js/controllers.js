@@ -15,7 +15,7 @@
   TSCtrl.$inject = ['$scope', '$rootScope', '$state', 'StorageService'];
 
   function TSCtrl($scope, $rootScope, $state, StorageService) {
-    $scope.$on('login:success', function(even, data) {
+    $scope.$on('login:success', function(event, data) {
       $rootScope.data.objectID = data.objectID;
       $rootScope.data.isExist = data.isExist;
       StorageService.set($rootScope.data);
@@ -25,16 +25,15 @@
       }, {});
     });
 
-    $scope.$on('login:fail', function(even, data) {
+    $scope.$on('login:fail', function(event, data) {
       StorageService.clear();
       $state.go('login');
     });
 
-    $scope.$on('setup:complete', function(even, data) {
-      StorageService.set({
-        isSetupComplete: true
-      });
+    $scope.$on('setup:complete', function(event, data) {
+      console.log("SETUP COMPLETED CTRL", data);
       $rootScope.data.isSetupComplete = true;
+      StorageService.set($rootScope.data);
       $state.go('notify');
     });
   }
@@ -63,9 +62,9 @@
     }
 
     $scope.complete = function() {
-      $rootScope.isSetupComplete = true;
-      StorageService.set($rootScope.data);
-      $rootScope.$broadcast('setup:complete', true);
+      $rootScope.$broadcast('setup:complete', {
+        isSetupComplete: true
+      });
     };
 
     $scope.selectHash = function(hash) {
@@ -78,6 +77,9 @@
       StorageService.set($rootScope.data);
       $scope.suggests = [];
       $scope.keyword = "";
+      setTimeout(function () {
+        $(".suggest-dropdown input").focus();
+      }, 10);
     };
 
     $scope.deselectHash = function(hash) {
@@ -127,7 +129,7 @@
       var $html = $('<div/>').append(response.data);
       $html.find('.bildirim_tumu a')
         .attr('target', '_blank');
-      $html.find('a.bildirim').attr('target', '_blank');
+      $html.find('a[data-toggle]').attr('target', '_blank');
       $html.find(".bildirim_sil").remove();
 
       $html.find("[data-toggle]").tooltip();
@@ -199,7 +201,5 @@
       $scope.isLoading = true;
       LoginService.login(userName).then(LoginSuccess, LoginFail);
     };
-
   }
-
 })();

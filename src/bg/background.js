@@ -21,7 +21,7 @@ chrome.extension.onConnect.addListener(function(port) {
     } else if (typeof msg === 'string' && msg === 'start') {
       window.backgroundHandler.start();
     } else if (typeof msg === 'string' && msg === 'resetFirstTime') {
-      if (window.backgroundHandler.newContentArray.length !== 0) {
+      if (window.backgroundHandler.options.newContentArray.length !== 0) {
         window.backgroundHandler.resetFirstTime();
       }
     } else if (msg === 'post:get') {
@@ -31,62 +31,62 @@ chrome.extension.onConnect.addListener(function(port) {
       });
     }
   });
-
 });
 
-BackgroundHandler = function() {
-
-  this.url = "http://teknoseyir.com/wp-admin/admin-ajax.php";
-  this.checkNotificationsInterval = null;
-  this.count = 0;
-  this.interval = 25000;
-  this.params = {};
-  this.isFirst = true;
-  this.new_content = [null];
-  this.lastCount = 0;
-  this.newContentArray = [];
+BackgroundHandler = function(options) {
+  this.options = _.extend({
+    url: "http://teknoseyir.com/wp-admin/admin-ajax.php",
+    checkNotificationsInterval: null,
+    count: 0,
+    interval: 25000,
+    params: {},
+    isFirst: true,
+    new_content: null,
+    lastCount: 0,
+    newContentArray: []
+  }, options);
 };
 
 BackgroundHandler.prototype.start = function() {
   var self = this;
-  if (this.params.isAuthor !== '1' && this.params.isSetupComplete) {
+
+  if (self.options.params.isAuthor !== '1' && self.options.params.isSetupComplete) {
     return;
   }
-  console.log('BG STARTED', this.params);
-  if (this.checkNotificationsInterval) {
-    this.stopCheckNotifications();
+  console.log('BG STARTED', self.options.params);
+  if (self.options.checkNotificationsInterval) {
+    self.stopCheckNotifications();
   }
-  this.startCheckNotifications();
+  self.startCheckNotifications();
 };
 
 BackgroundHandler.prototype.setParams = function(params) {
   console.log("SETTING PARAMS", params);
-  this.params = params.newData;
-  // if (this.params.isAuthor === '1') {
-  //   this.start();
-  // }
+  this.options.params = params.newData;
+
 };
 
 BackgroundHandler.prototype.startCheckNotifications = function() {
   var self = this;
 
-  this.checkNotificationsInterval = setInterval(function() {
+  self.checkNotifications();
+  this.options.checkNotificationsInterval = setInterval(function() {
     self.checkNotifications();
-  }, self.interval);
+  }, self.options.interval);
 };
 
 BackgroundHandler.prototype.stopCheckNotifications = function() {
   var self = this;
 
-  clearInterval(this.checkNotificationsInterval);
+  clearInterval(this.options.checkNotificationsInterval);
 };
 
 BackgroundHandler.prototype.resetFirstTime = function() {
   var self = this;
-  self.isFirst = true;
-  console.log('BG FIRSTTIME RESET', self);
-  self.lastCount = 0;
-  self.new_content = _.first(self.newContentArray);
+  self.options.isFirst = true;
+  console.log('BG FIRSTTIME RESET', self.options);
+  self.options.lastCount = 0;
+  self.options.new_content = _.first(self.options.newContentArray);
   // self.postContentObjects = [];
   // self.start();
 };
@@ -103,12 +103,12 @@ BackgroundHandler.prototype.notificationSound = function(command) {
 
 BackgroundHandler.prototype.checkNotifications = function() {
   var self = this;
-  console.log('CHECKING NOTIFICATIONS', self);
+  console.log('CHECKING NOTIFICATIONS', self.options);
 
-  if (self.isFirst) {
+  if (self.options.isFirst) {
     getNewContent();
   } else {
-    getNotify(self.new_content);
+    getNotify(self.options.new_content);
   }
 
   function getNewContent() {
@@ -116,16 +116,16 @@ BackgroundHandler.prototype.checkNotifications = function() {
       url: "http://teknoseyir.com",
       type: "GET"
     }).done(function(res) {
-      self.new_content = parseInt($(res).find('.stream').first().attr('id').split("post-")[1]);
-      console.log(self.new_content, "first content");
-      self.isFirst = false
+      self.options.new_content = parseInt($(res).find('.stream').first().attr('id').split("post-")[1]);
+      console.log(self.options.new_content, "first content");
+      self.options.isFirst = false;
       self.postContentObjects = [];
     });
   }
 
   function getNotify(con) {
     $.ajax({
-        url: self.url,
+        url: self.options.url,
         type: 'POST',
         dataType: 'json',
         data: {
@@ -135,9 +135,9 @@ BackgroundHandler.prototype.checkNotifications = function() {
           },
           action: "heartbeat",
           screen_id: "front",
-          object_id: self.params.objectID,
+          object_id: self.options.params.objectID,
           has_focus: true,
-          _nonce: self.params.nonce,
+          _nonce: self.options.params.nonce,
           interval: "60"
 
         },
@@ -147,10 +147,10 @@ BackgroundHandler.prototype.checkNotifications = function() {
         if (response.bildirim) {
           chrome.storage.local.get(function(item) {
             if (item.count)
-              self.count = item.count;
+              self.options.count = item.count;
           });
           if (response.bildirim.count) {
-            if (self.params.sound && (self.count < response.bildirim.count))
+            if (self.options.params.sound && (self.options.count < response.bildirim.count))
               self.notificationSound('play');
 
             chrome.browserAction.setBadgeText({
@@ -161,7 +161,7 @@ BackgroundHandler.prototype.checkNotifications = function() {
             chrome.storage.local.set({
               count: response.bildirim.count
             });
-            self.count = response.bildirim.count;
+            self.options.count = response.bildirim.count;
           }
         } else {
           console.log({
@@ -171,9 +171,9 @@ BackgroundHandler.prototype.checkNotifications = function() {
           });
         }
         if (response.new_content && response.new_content.length !== 0) {
-          self.newContentArray = response.new_content;
+          self.options.newContentArray = response.new_content;
           console.log("YAY NEW CONTENT", response.new_content);
-          // self.new_content = _.first(response.new_content);
+          // self.options.new_content = _.first(response.new_content);
           self.getAndCheckPosts(response.new_content);
         }
       });
@@ -188,13 +188,13 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
     getPost(el).done(function() {
       setTimeout(function() {
         if ((postsIds.length - 1) === index) {
-          if (hashcount !== 0 && (hashcount > self.lastCount)) {
+          if (hashcount !== 0 && (hashcount > self.options.lastCount)) {
 
             chrome.browserAction.setBadgeText({
-              text: (self.count + hashcount).toString()
+              text: (self.options.count + hashcount).toString()
             });
             self.notificationSound('play');
-            self.lastCount = hashcount;
+            self.options.lastCount = hashcount;
           }
         }
       }, 1000);
@@ -213,11 +213,16 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
       var postObject = {
         id: $post.find('#comments').attr('data-object_id'),
         user: $post.find('.stream-top > a.pull-left > img').addClass('new-post-img')
+          .wrap('<a/>')
+          .parent()
           .attr({
-            "data-toogle": "tooltip",
+            "data-toggle": "tooltip",
             "data-placement": "bottom",
-            "title": $post.find('.stream-top .author .username').text()
+            "data-original-title": $post.find('.stream-top .author .username').text(),
+            "href" : "http://teknoseyir.com/durum/" + id,
+            "target": "_blank"
           })
+          .tooltip()
           .wrap('<div/>').parent().html()
       };
 
@@ -242,7 +247,7 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
     console.log('CHECKING HASHES', hashes);
 
     hashes.forEach(function(el, index) {
-      if (_.indexOf(self.params.selectedHashes, el) !== -1) {
+      if (_.indexOf(self.options.params.selectedHashes, el) !== -1) {
         console.log('YAAAYY! NEW HASH', el);
 
         if ((hashes.length - 1) === index) {
@@ -253,6 +258,26 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
   }
 };
 
-if (!window.backgroundHandler) {
-  window.backgroundHandler = new BackgroundHandler();
-}
+
+chrome.storage.local.get(function(storage) {
+  var options = {};
+  console.log("STORAGE FETCHED", storage);
+  options = {
+    isFirst: (storage.isFirst !== undefined) ? storage.isFirst : true,
+    lastCount: storage.lastCount || 0,
+    new_content: storage.new_content,
+    isSetupComplete: (storage.isSetupComplete !== undefined) ? storage.isSetupComplete : false,
+    params: storage
+  };
+
+  console.log("OPTIONS", options);
+  if (!window.backgroundHandler) {
+    window.backgroundHandler = new BackgroundHandler(options);
+  }
+
+  if (options.isSetupComplete) {
+    console.log("SETUP IS COMPLETED BG", options.isSetupComplete);
+    window.backgroundHandler.start();
+  }
+
+});
