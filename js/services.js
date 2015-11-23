@@ -218,6 +218,7 @@
     };
 
     var set = function(object) {
+      console.log("Storage SET", object);
       return $q(function(resolve, reject) {
 
         St.set(object, function(response) {
