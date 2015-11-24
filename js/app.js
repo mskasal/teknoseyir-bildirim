@@ -4,7 +4,7 @@
   angular
     .module('TS', ['ui.router'])
 
-  .run(function(StorageService, $state, $rootScope) {
+  .run(function(StorageService, $state, $rootScope, LoginService) {
     chrome.browserAction.setBadgeText({
       text: ""
     });
@@ -15,6 +15,9 @@
     $rootScope.CommunicationPort.onMessage.addListener(function(msg) {
       if (msg.type === 'posting') {
         $rootScope.$broadcast('bg:posting', msg.data);
+      } else if (msg.type === 'nonce-reset') {
+        console.log("SENDING RESET TO LOGIN SERVICE");
+        LoginService.login(msg.data.username);
       } else {
         $rootScope.$broadcast('bg:message', msg);
       }

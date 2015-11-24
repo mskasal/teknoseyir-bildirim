@@ -112,7 +112,7 @@
 
     $rootScope.$on('bg:posting', function(event, msg) {
       console.log("NOTIFY LISTENING", msg);
-      msg = msg.slice(-4);
+      msg = msg.slice(-7);
       msg.forEach(function(item, index) {
         item.user = $sce.trustAsHtml(item.user);
         if ((msg.length - 1) === index) {

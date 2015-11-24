@@ -25,10 +25,21 @@ chrome.extension.onConnect.addListener(function(port) {
         window.backgroundHandler.resetFirstTime();
       }
     } else if (msg === 'post:get') {
+      console.log("SENDING POST OBJECTS", window.backgroundHandler.postContentObjects);
       port.postMessage({
         type: 'posting',
         data: window.backgroundHandler.postContentObjects
       });
+
+      if (window.backgroundHandler.options.nonceReset) {
+        console.log("NONCE RESET SEND TO APP");
+        port.postMessage({
+          type: 'nonce-reset',
+          data: {
+            username: window.backgroundHandler.options.params.userName
+          }
+        });
+      }
     }
   });
 });
@@ -43,7 +54,8 @@ BackgroundHandler = function(options) {
     isFirst: true,
     new_content: null,
     lastCount: 0,
-    newContentArray: []
+    newContentArray: [],
+    nonceReset: false
   }, options);
 };
 
@@ -163,12 +175,14 @@ BackgroundHandler.prototype.checkNotifications = function() {
             });
             self.options.count = response.bildirim.count;
           }
+          self.options.nonceReset = false;
         } else {
           console.log({
             type: 'fail',
             message: 'bildirim alinamadi',
             code: 30
           });
+          self.options.nonceReset = true;
         }
         if (response.new_content && response.new_content.length !== 0) {
           self.options.newContentArray = response.new_content;
@@ -208,6 +222,7 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
       type: 'GET'
     }).done(function(response) {
       var $post = $(response).find('article#post-' + id);
+      var username = $post.find('.stream-top .author .username').text();
       var $hashes = $(response).find('article#post-' + id).find('.hash_tag');
       var hashes = [];
       var postObject = {
@@ -218,16 +233,24 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
           .attr({
             "data-toggle": "tooltip",
             "data-placement": "bottom",
-            "data-original-title": $post.find('.stream-top .author .username').text(),
-            "href" : "http://teknoseyir.com/durum/" + id,
+            "data-original-title": username,
+            "href": "http://teknoseyir.com/durum/" + id,
             "target": "_blank"
           })
           .tooltip()
           .wrap('<div/>').parent().html()
       };
-
-      self.postContentObjects.push(postObject);
-
+      console.log("POST OWNER", username, "ACC OWNER", self.options.params.userName);
+      if (username === ("@" + self.options.params.userName)) {
+        console.log("SAME USER RETURNING");
+        return;
+      }
+      var isExistObj = _.findWhere(self.postContentObjects, {
+        id: postObject.id
+      });
+      if (!isExistObj) {
+        self.postContentObjects.push(postObject);
+      }
       if ($hashes.length !== 0) {
 
         $hashes.map(function(index, el) {
