@@ -25,6 +25,7 @@ chrome.extension.onConnect.addListener(function(port) {
         window.backgroundHandler.resetFirstTime();
       }
     } else if (msg === 'post:get') {
+      console.log("SENDING POST OBJECTS", window.backgroundHandler.postContentObjects);
       port.postMessage({
         type: 'posting',
         data: window.backgroundHandler.postContentObjects
@@ -208,6 +209,7 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
       type: 'GET'
     }).done(function(response) {
       var $post = $(response).find('article#post-' + id);
+      var username = $post.find('.stream-top .author .username').text();
       var $hashes = $(response).find('article#post-' + id).find('.hash_tag');
       var hashes = [];
       var postObject = {
@@ -218,16 +220,24 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
           .attr({
             "data-toggle": "tooltip",
             "data-placement": "bottom",
-            "data-original-title": $post.find('.stream-top .author .username').text(),
-            "href" : "http://teknoseyir.com/durum/" + id,
+            "data-original-title": username,
+            "href": "http://teknoseyir.com/durum/" + id,
             "target": "_blank"
           })
           .tooltip()
           .wrap('<div/>').parent().html()
       };
-
-      self.postContentObjects.push(postObject);
-
+      console.log("POST OWNER", username, "ACC OWNER", self.options.params.userName);
+      if (username === self.options.params.userName) {
+        console.log("SAME USER RETURNING");
+        return;
+      }
+      var isExistObj = _.findWhere(self.postContentObjects, {
+        id: postObject.id
+      });
+      if (!isExistObj) {
+        self.postContentObjects.push(postObject);
+      }
       if ($hashes.length !== 0) {
 
         $hashes.map(function(index, el) {
