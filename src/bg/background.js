@@ -30,6 +30,16 @@ chrome.extension.onConnect.addListener(function(port) {
         type: 'posting',
         data: window.backgroundHandler.postContentObjects
       });
+
+      if (window.backgroundHandler.options.nonceReset) {
+        console.log("NONCE RESET SEND TO APP");
+        port.postMessage({
+          type: 'nonce-reset',
+          data: {
+            username: window.backgroundHandler.options.params.userName
+          }
+        });
+      }
     }
   });
 });
@@ -44,7 +54,8 @@ BackgroundHandler = function(options) {
     isFirst: true,
     new_content: null,
     lastCount: 0,
-    newContentArray: []
+    newContentArray: [],
+    nonceReset: false
   }, options);
 };
 
@@ -164,12 +175,14 @@ BackgroundHandler.prototype.checkNotifications = function() {
             });
             self.options.count = response.bildirim.count;
           }
+          self.options.nonceReset = false;
         } else {
           console.log({
             type: 'fail',
             message: 'bildirim alinamadi',
             code: 30
           });
+          self.options.nonceReset = true;
         }
         if (response.new_content && response.new_content.length !== 0) {
           self.options.newContentArray = response.new_content;
@@ -228,7 +241,7 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
           .wrap('<div/>').parent().html()
       };
       console.log("POST OWNER", username, "ACC OWNER", self.options.params.userName);
-      if (username === self.options.params.userName) {
+      if (username === ("@" + self.options.params.userName)) {
         console.log("SAME USER RETURNING");
         return;
       }

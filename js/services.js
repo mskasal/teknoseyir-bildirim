@@ -16,6 +16,7 @@
   function LoginService($http, $q, HOST_URLS, $rootScope) {
 
     var login = function(userName) {
+      console.log("LOGIN START WITH", userName);
       return $q(function(resolve, reject) {
         $http.get(HOST_URLS.loginURL + userName)
           .success(function(data, status, headers, config) {
