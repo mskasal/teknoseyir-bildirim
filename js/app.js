@@ -17,7 +17,9 @@
         $rootScope.$broadcast('bg:posting', msg.data);
       } else if (msg.type === 'nonce-reset') {
         console.log("SENDING RESET TO LOGIN SERVICE");
-        LoginService.login(msg.data.username);
+        LoginService.login(msg.data.username).then(function(data){
+          $rootScope.$broadcast('login:success', data);
+        });
       } else {
         $rootScope.$broadcast('bg:message', msg);
       }
