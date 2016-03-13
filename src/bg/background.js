@@ -156,6 +156,9 @@ BackgroundHandler.prototype.checkNotifications = function() {
       })
       .done(function(response) {
         console.log("BILDIRIM RESPONSE", response);
+        if (response.bildirim.count !== undefined) {
+          response.bildirim.count = parseInt(response.bildirim.count);
+        }
         if (response.bildirim) {
           chrome.storage.local.get(function(item) {
             if (item.count)
@@ -217,13 +220,20 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
   });
 
   function getPost(id) {
-    return $.ajax({
-      url: 'http://teknoseyir.com/durum/' + id,
-      type: 'GET'
-    }).done(function(response) {
+    return $.get('http://teknoseyir.com/durum/' + id).done(function(response) {
+      var $hashes = [];
       var $post = $(response).find('article#post-' + id);
+
+      var classes = $post.attr('class').split(' ');
+      for (var i = 0; i < classes.length; i++) {
+        var matches = /^hash_tag\-(.+)/.exec(classes[i]);
+        if (matches !== null) {
+          var fxclass = matches[1];
+          $hashes.push(fxclass);
+        }
+      }
+
       var username = $post.find('.stream-top .author .username').text();
-      var $hashes = $(response).find('article#post-' + id).find('.hash_tag');
       var hashes = [];
       var postObject = {
         id: $post.find('#comments').attr('data-object_id'),
@@ -253,9 +263,9 @@ BackgroundHandler.prototype.getAndCheckPosts = function(postsIds) {
       }
       if ($hashes.length !== 0) {
 
-        $hashes.map(function(index, el) {
-          var hash = $(el).html().replace('#', '');
-          hashes.push(hash);
+        $hashes.map(function(el, index) {
+          // var hash = $(el).html().replace('#', '');
+          hashes.push(el);
 
           if (($hashes.length - 1) === index) {
             checkHashes(hashes, response);

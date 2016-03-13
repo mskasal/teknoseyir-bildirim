@@ -1,6 +1,6 @@
 {
   "name": "Teknoseyir bildirim",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "manifest_version": 2,
   "description": "Teknoseyir bildirim eklentisi kullanici ile ilgili bildirimleri ve kullanicinin takip ettigi hashtag iceren postlari kullaniciya bildirir.",
   "homepage_url": "https://github.com/mskasal",
@@ -34,6 +34,7 @@
     "idle",
     "notifications",
     "tabs",
-    "http://teknoseyir.com/*"
+    "http://teknoseyir.com/*",
+    "https://teknoseyir.com/*"
   ]
 }
