@@ -81,7 +81,7 @@
 
       var checkName = function(name) {
         var isEx = null;
-        var patt = new RegExp("author-.+");
+        var patt = new RegExp("author-[a-zA-Z0-9_-]+");
         var ress = patt.exec(str);
         ress = ress[0].split("-")[1];
 
